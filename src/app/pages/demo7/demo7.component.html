@@ -1,0 +1,58 @@
+<form nz-form [formGroup]="myForm">
+  <div class = "form-list">
+    <nz-table #basicTable [nzData]="department"  [nzShowPagination] = "false">
+      <thead>
+        <tr>
+          <th nzAlign = "center">部门</th>
+          <th nzAlign = "center">节目</th>
+        </tr>
+      </thead>
+      <tbody formControlName = "num" ngDefaultControl>
+        <tr *ngFor="let item of basicTable.data; let i = index">
+          <td nzAlign = "center">{{item.name}}</td>
+          <td nzAlign = "center">
+            <div *ngFor = "let data of item.menus">
+              <span class = "width">{{data}}</span>
+              <a class = "icon-del" (click) = "delete(data)" *ngIf = "!submitFlag">delete</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+    <button nz-button nzType="primary" class="save-button" (click) = "submit()" *ngIf = "!submitFlag" [disabled] = "myForm.get('num').hasError('numSum')">保存</button>
+  </div>
+  
+  <div class="addList" *ngIf = "!submitFlag">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24">
+        部门
+      </nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" >
+        <nz-select name="部门" [ngModelOptions]="{standalone: true}" [(ngModel)]="departmentName" (ngModelChange)="searchSelect($event)">
+          <nz-option *ngFor="let option of department; let i = index" nzValue="{{ option.name }}" nzLabel="{{ option.name }}"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>节目</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24"  [nzErrorTip]="errorTp1">
+        <input nz-input type="text" formControlName="name" placeholder="填写节目名称"/>
+        <ng-template #errorTp1 let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            menu name is required!
+          </ng-container>
+          <ng-container *ngIf="control.hasError('exists')">
+            menu name is exists!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <nz-form-item class = "con-button" *ngIf = "!submitFlag">
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="myForm.get('name').hasError('exists') || myForm.get('name').hasError('required')" (click) = "addMenu()">添加节目</button>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>

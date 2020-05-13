@@ -1,0 +1,50 @@
+<form #form="ngForm">
+  <ul>
+    <li>
+      name:<input type="text" name="name" [(ngModel)]="formData.name" minlength="5" appNameAsyncValdator required
+        #nameControl="ngModel">
+      <ng-container *ngIf="nameControl.dirty && nameControl.hasError('required')">
+        name 必须填写！
+      </ng-container>
+
+      <ng-container *ngIf="nameControl.dirty &&nameControl.hasError('minlength')">
+        minlength
+      </ng-container>
+      <ng-container *ngIf="nameControl.dirty &&nameControl.hasError('exists')">
+        name 已经存在！
+      </ng-container>
+    </li>
+    <li>
+      age: <select [(ngModel)]="formData.age" name="age" [appAgeValidator]="5" #ageControl="ngModel">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+
+      <ng-container *ngIf="ageControl.hasError('ageGT')">
+        age 必须大于5！
+      </ng-container>
+    </li>
+  </ul>
+  <button type="button" [disabled]="!form.valid">text</button>
+
+  <ul>
+    <li>status:{{nameControl.status}}</li>
+    <li>value:{{nameControl.value}}</li>
+    <li [class.red]="nameControl.dirty">dirty:{{nameControl.dirty}}</li>
+    <li [class.red]="nameControl.enabled">enabled:{{nameControl.enabled}}</li>
+    <li [class.red]="nameControl.disabled">disabled:{{nameControl.disabled}}</li>
+    <li [class.red]="nameControl.valid">valid:{{nameControl.valid}}</li>
+    <li [class.red]="nameControl.invalid">invalid:{{nameControl.invalid}}</li>
+    <li [class.red]="nameControl.pending">pending:{{nameControl.pending}}</li>
+    <li [class.red]="nameControl.pristine">pristine:{{nameControl.pristine}}</li>
+    <li [class.red]="nameControl.touched">touched:{{nameControl.touched}}</li>
+    <li [class.red]="nameControl.untouched">untouched:{{nameControl.untouched}}</li>
+  </ul>
+</form>

@@ -1,0 +1,66 @@
+<form [formGroup]="fg">
+  <ul>
+    <li>
+      name:<input type="text" formControlName="name">
+      {{fg.get('name').errors|json}}
+      <ng-container *ngIf="fg.get('name').hasError('required')">
+        name 必须填写！
+      </ng-container>
+      <ng-container *ngIf="fg.get('name').hasError('minlength')">
+        minlength
+      </ng-container>
+
+      <ng-container *ngIf="fg.get('name').hasError('exists')">
+        name 已经存在！
+      </ng-container>
+    </li>
+    <li>
+      age: <select formControlName="age">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+      </select>
+
+      <ng-container *ngIf="fg.get('age').hasError('min')">
+        age 必须大于5！
+      </ng-container>
+    </li>
+  </ul>
+
+
+  <ul formArrayName="array">
+    <li *ngFor="let item of array.controls let i = index " [formGroupName]="i">
+      <input type="number" formControlName="num">
+    </li>
+  </ul>
+
+  <ng-container *ngIf="array.hasError('numSum')">
+    num 累加的值不能超过5！
+  </ng-container>
+
+  <button (click)="add()" [disabled]="array.hasError('numSum')">
+    add
+  </button>
+
+  <button type="button" [disabled]="!fg.valid">text</button>
+  <ul>
+    <li>status:{{nameControl.status}}</li>
+    <li>value:{{nameControl.value}}</li>
+    <li [class.red]="nameControl.dirty">dirty:{{nameControl.dirty}}</li>
+    <li [class.red]="nameControl.enabled">enabled:{{nameControl.enabled}}</li>
+    <li [class.red]="nameControl.disabled">disabled:{{nameControl.disabled}}</li>
+    <li [class.red]="nameControl.valid">valid:{{nameControl.valid}}</li>
+    <li [class.red]="nameControl.invalid">invalid:{{nameControl.invalid}}</li>
+    <li [class.red]="nameControl.pending">pending:{{nameControl.pending}}</li>
+    <li [class.red]="nameControl.pristine">pristine:{{nameControl.pristine}}</li>
+    <li [class.red]="nameControl.touched">touched:{{nameControl.touched}}</li>
+    <li [class.red]="nameControl.untouched">untouched:{{nameControl.untouched}}</li>
+  </ul>
+</form>
+<!-- {{fg.getRawValue()|json}} -->

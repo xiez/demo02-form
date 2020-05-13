@@ -1,0 +1,35 @@
+.form-list {
+  text-align: center;
+  .menu {
+    font-size: 14px;
+  }
+  .icon-del {
+    font-size: 12px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -10px;
+  }
+  .width {
+    width: 500px;
+    display: inline-block;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+  }
+  .save-button {
+    margin-top: 20px;
+  }
+  
+}
+
+.con-button {
+  text-align: center;
+}
+
+.addList {
+  margin-top: 20px;
+}
