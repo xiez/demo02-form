@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { nameExists } from './form-validator';
 
 @Component({
   selector: 'app-demo7',
@@ -10,6 +11,7 @@ import { delay } from 'rxjs/operators';
 })
 export class Demo7Component implements OnInit {
 
+  // model
   department = [
     {
       id: 0,
@@ -19,7 +21,8 @@ export class Demo7Component implements OnInit {
       id: 1,
       name: '研发二部',
       menus: []
-    }, {
+    },
+      {
       id: 2,
       name: '研发三部',
       menus: []
@@ -38,72 +41,71 @@ export class Demo7Component implements OnInit {
     },
   ];
 
-  menus = [];
+  // state
+  hasSubmitted = false;         // 是否提交节目
+  saveBtnDisabled = true;     // 保存按钮是否禁用
+  selectedDept = this.department[0].name; // 当前选中的部门
 
-  submitFlag = false;
-
-  departmentName = this.department[0].name;
-  menuTitle = '';
-
+  // form
   myForm: FormGroup;
-  constructor( private fb: FormBuilder ) {
+
+  constructor(
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    const that = this;
     this.myForm = this.fb.group({
-      name: [null, [Validators.required, this.nameExists(this.menus)]],
-      num: [null, [this.minNum(this.department)]]
+      name: [null, [
+        Validators.required,
+        nameExists(() => this.allMenus.bind(that))
+      ]],
     });
   }
 
-  nameExists(list: any): ValidatorFn {
-    return (control: AbstractControl) => {
-      if (list.includes(control.value)) {
-        return { exists: true};
-      }
-      return null;
-    };
+  // 当前添加的所有节目
+  allMenus(): string[] {
+    return this.department.map(o => o.menus).reduce((acc, val) => [...acc, ...val], []);
   }
 
-  minNum(list: any): ValidationErrors  {
-    return (control: AbstractControl) => {
-      if (list.some (o => o.menus.length < 3)) {
-        return { numSum: true };
-      }
-
-      return null;
-    };
+  // 计算保存按钮的状态
+  isSaveBtnDisabled(): boolean {
+    return (
+      this.department.some (o => o.menus.length < 3) ?
+        this.saveBtnDisabled = true :
+        this.saveBtnDisabled = false
+    );
   }
 
+  // ------------------------------
+  // getter
+  // ------------------------------
   get nameControl() {
     return this.myForm.get('name');
   }
 
-  searchSelect(value): void {
-    this.departmentName = value;
+  // ------------------------------
+  // event handler
+  // ------------------------------
+  deleteDept( data: string): void {
+    this.department.map(dept => {
+      dept.menus = dept.menus.filter(o => o !== data);
+    });
+    this.isSaveBtnDisabled();
   }
 
-  delete( data: string): void {
-    this.department.forEach(item => {
-      if (item.menus.includes(data)) {
-        item.menus = item.menus.filter(o => o !== data);
-      }
-    });
-    this.menus.splice(this.menus.findIndex( v => v === data), 1);
+  selectDept(value: string): void {
+    this.selectedDept = value;
   }
 
   addMenu(): void {
-    this.department.filter(item => {
-      if (item.name === this.departmentName) {
-        item.menus.push(this.nameControl.value);
-        this.menus.push(this.nameControl.value);
-        this.myForm.reset();
-      }
-    });
+    const dept = this.department.filter(item => item.name === this.selectedDept)[0];
+    dept.menus.push(this.nameControl.value);
+    this.myForm.reset();
+    this.isSaveBtnDisabled();
   }
 
   submit(): void {
-    this.submitFlag = true;
+    this.hasSubmitted = true;
   }
-
-  ngOnInit(): void {
-  }
-
 }
