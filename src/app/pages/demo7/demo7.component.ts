@@ -63,18 +63,18 @@ export class Demo7Component implements OnInit {
     });
   }
 
+  ngDoCheck() {
+    console.log('check save btn status..')
+
+    // 计算保存按钮的状态
+    this.department.some (o => o.menus.length < 3) ?
+      this.saveBtnDisabled = true :
+      this.saveBtnDisabled = false
+  }
+
   // 当前添加的所有节目
   allMenus(): string[] {
     return this.department.map(o => o.menus).reduce((acc, val) => [...acc, ...val], []);
-  }
-
-  // 计算保存按钮的状态
-  isSaveBtnDisabled(): boolean {
-    return (
-      this.department.some (o => o.menus.length < 3) ?
-        this.saveBtnDisabled = true :
-        this.saveBtnDisabled = false
-    );
   }
 
   // ------------------------------
@@ -91,7 +91,6 @@ export class Demo7Component implements OnInit {
     this.department.map(dept => {
       dept.menus = dept.menus.filter(o => o !== data);
     });
-    this.isSaveBtnDisabled();
   }
 
   selectDept(value: string): void {
@@ -102,7 +101,6 @@ export class Demo7Component implements OnInit {
     const dept = this.department.filter(item => item.name === this.selectedDept)[0];
     dept.menus.push(this.nameControl.value);
     this.myForm.reset();
-    this.isSaveBtnDisabled();
   }
 
   submit(): void {
