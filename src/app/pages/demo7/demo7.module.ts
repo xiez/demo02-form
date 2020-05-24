@@ -7,11 +7,11 @@ import { ReactiveFormsModule} from '@angular/forms';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 import { Demo7RoutingModule } from './demo7-routing.module';
-import { Demo7Component } from './demo7.component';
+import { Demo7Component, Demo7ListComponent } from './demo7.component';
 
 
 @NgModule({
-  declarations: [Demo7Component],
+  declarations: [Demo7Component, Demo7ListComponent],
   imports: [
     CommonModule,
     FormsModule,

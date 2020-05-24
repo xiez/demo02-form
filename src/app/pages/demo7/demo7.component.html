@@ -1,29 +1,11 @@
 <form nz-form [formGroup]="myForm">
-  <div class = "form-list">
-    <nz-table #basicTable [nzData]="department"  [nzShowPagination] = "false">
-      <thead>
-        <tr>
-          <th nzAlign = "center">部门</th>
-          <th nzAlign = "center">节目</th>
-        </tr>
-      </thead>
-      <tbody ngDefaultControl>
-        <tr *ngFor="let item of basicTable.data; let i = index">
-          <td nzAlign = "center">{{item.name}}</td>
-          <td nzAlign = "center">
-            <div *ngFor = "let data of item.menus">
-              <span class = "width">{{data}}</span>
-              <a class = "icon-del" (click) = "deleteDept(data)" *ngIf = "!hasSubmitted">delete</a>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+  <app-demo7-list [department]="department"
+                  (dept)="deleteDept($event)"
+                  (submitForm)="submitForm()"
+                  >
+  </app-demo7-list>
 
-    <button nz-button nzType="primary" class="save-button" (click) = "submit()" *ngIf = "!hasSubmitted" [disabled] = "saveBtnDisabled">保存</button>
-  </div>
-  
-  <div class="addList" *ngIf = "!hasSubmitted">
+  <div class="addList" *ngIf="!hasSubmitted">
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24">
         部门
@@ -57,4 +39,5 @@
     </nz-form-control>
   </nz-form-item>
 
+  <p>fff: {{ runChangeDetection }}</p>
 </form>
